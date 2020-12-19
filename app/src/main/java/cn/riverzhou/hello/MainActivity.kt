@@ -1,54 +1,44 @@
 package cn.riverzhou.hello
 
-import android.os.Build
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
 
-    private var webView: WebView? = null
-    private var WEBURL = "https://riverzhou.github.io"
-    //private var WEBURL = "https://ie.icoa.cn/"
-    //private var WEBURL = "http://127.0.0.1/"
+class MainActivity : Activity() {
+
+    private var webview: WebView? = null
+    private var weburl = "http://192.168.3.36:5000"
+    //private var weburl = "https://riverzhou.github.io"
+    //private var weburl = "https://ie.icoa.cn"
+    //private var weburl = "http://127.0.0.1:5000"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         setContentView(R.layout.activity_main)
+
         initActivity()
         initWebView()
     }
 
     private fun initActivity(){
-        //屏幕常亮 在 setContentView  上写
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        //全屏
-        //window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        window.decorView.systemUiVisibility = (
-                        View.SYSTEM_UI_FLAG_LOW_PROFILE //状态栏显示处于低能显示状态(low profile模式)，状态栏上一些图标显示会被隐藏。
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN //Activity全屏显示，且状态栏被隐藏覆盖掉。
-                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY //全屏沉浸模式，
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //隐藏虚拟按键(导航栏)。有些手机会用虚拟按键来代替物理按键。
-                )
-
-        //隐藏标题栏
-        val actionBar: androidx.appcompat.app.ActionBar? = supportActionBar
-        actionBar!!.hide()
     }
 
     private fun initWebView(){
-        webView = findViewById(R.id.webSite)
+        webview = findViewById(R.id.webSite)
 
-        var webSettings = webView!!.settings
+        var webSettings = webview!!.settings
 
-        webSettings.setAppCacheEnabled(true) // 启用或禁用缓存
-        webSettings.setAppCachePath(cacheDir.path) // 设置应用缓存路径
+        //webSettings.setAppCacheEnabled(true) // 启用或禁用缓存
+        //webSettings.setAppCachePath(cacheDir.path) // 设置应用缓存路径
 
         webSettings.javaScriptEnabled = true  // 开启 JavaScript 交互
         webSettings.cacheMode = WebSettings.LOAD_DEFAULT // 只要缓存可用就加载缓存, 哪怕已经过期失效 如果缓存不可用就从网络上加载数据
@@ -71,10 +61,10 @@ class MainActivity : AppCompatActivity() {
         webSettings.loadWithOverviewMode = true  // 缩放至屏幕的大小
         webSettings.allowFileAccess = true // 设置可以访问文件
 
-        webView?.fitsSystemWindows = true
-        webView?.setLayerType(View.LAYER_TYPE_HARDWARE,null)
+        webview?.fitsSystemWindows = true
+        webview?.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-        webView?.webViewClient = object : WebViewClient(){
+        webview?.webViewClient = object : WebViewClient(){
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 view?.loadUrl(url)
                 return true
@@ -83,12 +73,16 @@ class MainActivity : AppCompatActivity() {
 
         // webSettings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
 
-        webView?.loadUrl(WEBURL)
+        val metrics: DisplayMetrics? = resources.displayMetrics
+        val w = metrics?.widthPixels
+        val h = metrics?.heightPixels
+
+        webview?.loadUrl("$weburl/?h=$h&w=$w")
     }
 
     override fun onBackPressed() {
-        if (webView!!.canGoBack()){
-            webView!!.goBack()
+        if (webview!!.canGoBack()){
+            webview!!.goBack()
             return
         }
         return super.onBackPressed()
