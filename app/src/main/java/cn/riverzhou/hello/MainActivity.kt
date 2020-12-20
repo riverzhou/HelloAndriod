@@ -14,10 +14,10 @@ import android.webkit.WebViewClient
 class MainActivity : Activity() {
 
     private var webview: WebView? = null
-    private var weburl = "http://192.168.3.36:5000"
+    //private var weburl = "http://192.168.3.36:5000"
     //private var weburl = "https://riverzhou.github.io"
     //private var weburl = "https://ie.icoa.cn"
-    //private var weburl = "http://127.0.0.1:5000"
+    private var weburl = "http://127.0.0.1:9524"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
